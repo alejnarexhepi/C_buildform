@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Build Form</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="task.css">
+ 
+</head>
+<body>
+  <fieldset>
+    <legend>
+  <h1>Custom Build Form</h1>
+  
+  <form id="custom-form">
+    <button type="button" onclick="addField('text')">Add Text Field</button>
+    <button type="button" onclick="addField('select')">Add Select Field</button>
+    <button type="button" onclick="removeField()">Remove Last Field</button>
+    <br><br>
+  </form>
+<br> <br>
+  <button type="button" onclick="submitForm()">Save Data</button>
+<br> <br>
+  <table>
+    <thead>
+      <tr>
+        <th>Answers:</th>
+      </tr>
+    </thead>
+    <tbody id="custom-table-body">
+    </tbody>
+  </table>
+  </fieldset>
+
+  <script>
+    // array to store added fields
+    let fields = [];
+
+    // function to add a new field
+    function addField(type) {
+      // generate an id for the field
+      const id = type == "text" ? "Text:" : "Select:";
+
+
+      // create a new field element based on the type
+      let field;
+
+        
+      if (type === 'text') {
+        field = '<input type="text" id="' + id + '" name="' + id + '">';
+      } else if (type === 'select') {
+        field = '<select id="' + id + '" name="' + id + '"><option>Option 1</option><option>Option 2</option></select>';
+      }
+
+      // create a new label element for the field
+      const label = '<label for="' + id + '">Field ' + (fields.length + 1) + '</label>';
+
+      // add the field and label to the form
+      $('#custom-form').append(label);
+      $('#custom-form').append(field);
+      fields.push(id);
+    }
+
+    // function to remove the last added field
+    function removeField() {
+  if (fields.length > 0) {
+    const id = fields.pop();
+    const field = document.getElementById(id);
+    const label = document.querySelector(`label[for="${id}"]`);
+    field.parentNode.removeChild(field);
+    label.parentNode.removeChild(label);
+  }
+}
+
+
+    // function to submit the form and display the data in a table
+    function submitForm() {
+      const tableBody = $('#custom-table-body');
+
+      // clear the table
+      tableBody.empty();
+
+      // get the form data
+      const formData = $('#custom-form').serializeArray();
+
+      // loop through the form data and add rows to the table
+      formData.forEach(function(field) {
+        const row = $('<tr>');
+        const header = $('<th>').text(field.name);
+        const answer = $('<td>').text(field.value);
+        row.append(header);
+        row.append(answer);
+        tableBody.append(row);
+      });
+    }
+  </script>
+</body>
+</html>
